@@ -37,11 +37,13 @@ public class Player : MonoBehaviour
     public bool isDashing;
     public float dashTime;
     public float dashCooldownTime;
+    private Health health;
 
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<Health>();
     }
 
     void Update()
@@ -122,9 +124,17 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if(other.relativeVelocity.magnitude > 25)
+        // Fall damage
+        if (other.relativeVelocity.magnitude > 25)
         {
             Instantiate(bloodVfx, transform.position, Quaternion.identity);
+            health.TakeDamage(0.5f);
+        }
+
+        // Bullet damage
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            health.TakeDamage(0.5f);
         }
     }
 }

@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public Vector3 direction = Vector3.right;
     public float speed = 20;
-    public Vector2 damageRange = new Vector2(10, 20);
+    public float damageAmount = 0.5f;
     public float lifetime = 3;
 
     private Rigidbody2D rb;
@@ -24,12 +24,14 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        var damage = Random.Range(damageRange.x, damageRange.y);
+        Health health = other.gameObject.GetComponent<Health>();
+        if (health != null)
+        {
+            health.TakeDamage(damageAmount);
+            Debug.Log($"Dealt {damageAmount} damage to {other.gameObject.name}");
+        }
 
-        //TODO: apply damage to health component
-        //TODO: damage indictor
-
-        print($"Dealt {damage} damage to {other.gameObject.name}");
+        // Destroy the bullet
         Destroy(gameObject);
     }
 }

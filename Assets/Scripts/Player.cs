@@ -141,7 +141,6 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        // Fall damage
         if (other.relativeVelocity.magnitude > 25f)
         {
             Instantiate(bloodVfx, transform.position, Quaternion.identity);

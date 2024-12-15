@@ -26,24 +26,32 @@ public class Player : MonoBehaviour
     public float coyoteTime = 0.2f;
     public float jumBufferTime = 0.2f;
     public int maxJumps = 2;
-
-
     private int jumpsLeft;
     private float jumpBufferCounter;
     private float coyoteCounter;
     private bool isGrounded;
     private Rigidbody2D rb;
     public float inputX;
+
+    [Header("Dash Mechanics")]
     public bool isDashing;
     public float dashTime;
     public float dashCooldownTime;
+
     private Health health;
 
-    
+    [Header("Audio")]
+    public AudioClip jumpSound;
+    public AudioClip walkSound;
+    private AudioSource audioSource;
+
+    private bool isWalking;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -72,7 +80,6 @@ public class Player : MonoBehaviour
             jumpBufferCounter -= Time.deltaTime;
         }
 
-        
         if ((coyoteCounter > 0 || jumpsLeft > 0) && jumpBufferCounter > 0)
         {
             jumpBufferCounter = 0;
@@ -84,9 +91,12 @@ public class Player : MonoBehaviour
             {
                 jumpsLeft--;
             }
+
+            // Play jump sound
+            audioSource.PlayOneShot(jumpSound);
         }
 
-        //dasdh
+        // Dash
         if(Input.GetButtonDown("Fire3") && dashCooldownTime <= 0)
         {
             isDashing = true;
@@ -105,6 +115,20 @@ public class Player : MonoBehaviour
             }
         }
         dashCooldownTime -= Time.deltaTime;
+
+        // Walking sound
+        if (isGrounded && Mathf.Abs(inputX) > 0 && !isWalking)
+        {
+            isWalking = true;
+            audioSource.clip = walkSound;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+        else if ((Mathf.Abs(inputX) == 0 || !isGrounded) && isWalking)
+        {
+            isWalking = false;
+            audioSource.Stop();
+        }
     }   
 
     void FixedUpdate() //physics update

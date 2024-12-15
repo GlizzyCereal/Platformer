@@ -1,9 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
     public float maxHealth = 3f;
-    public float currentHealth;
+    public List<Image> hearts;
+    public Sprite fullHeart;
+    public Sprite halfHeart;
+    public Sprite emptyHeart;
+    private float currentHealth;
 
     void Start()
     {
@@ -13,7 +20,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-
+        UpdateHearts();
         if (currentHealth <= 0)
         {
             Die();
@@ -32,7 +39,24 @@ public class Health : MonoBehaviour
 
     void Die()
     {
-        Debug.Log(gameObject.name + " has died.");
-        Destroy(gameObject);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void UpdateHearts(){
+        for (int i = 0; i < hearts.Count; i++)
+        {
+            if (i < currentHealth / 2)
+            {
+            hearts[i].sprite = fullHeart;
+            }
+            else if (i < currentHealth / 2 + 0.5f)
+            {
+            hearts[i].sprite = halfHeart;
+            }
+            else
+            {
+            hearts[i].sprite = emptyHeart;
+            }
+        }
     }
 }

@@ -6,7 +6,13 @@ public class Shooter : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public Transform firePoint;
+    public AudioClip shootSound;
+    private AudioSource audioSource;
 
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -17,6 +23,7 @@ public class Shooter : MonoBehaviour
             var direction = (worldPosition - firePoint.position).normalized;
             
             var bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(shootSound, transform.position);
             bullet.GetComponent<Bullet>().direction = direction;
         }
     }

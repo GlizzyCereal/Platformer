@@ -15,6 +15,7 @@ public class Health : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        UpdateHearts();
     }
 
     public void TakeDamage(float amount)
@@ -30,11 +31,11 @@ public class Health : MonoBehaviour
     public void Heal(float amount)
     {
         currentHealth += amount;
-
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
+        UpdateHearts();
     }
 
     void Die()
@@ -42,20 +43,21 @@ public class Health : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    void UpdateHearts(){
+    void UpdateHearts()
+    {
         for (int i = 0; i < hearts.Count; i++)
         {
-            if (i < currentHealth / 2)
+            if (i < currentHealth)
             {
-            hearts[i].sprite = fullHeart;
+                hearts[i].sprite = fullHeart;
             }
-            else if (i < currentHealth / 2 + 0.5f)
+            else if (i < currentHealth + 0.5f)
             {
-            hearts[i].sprite = halfHeart;
+                hearts[i].sprite = halfHeart;
             }
             else
             {
-            hearts[i].sprite = emptyHeart;
+                hearts[i].sprite = emptyHeart;
             }
         }
     }
